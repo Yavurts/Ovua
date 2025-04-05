@@ -18,7 +18,7 @@ title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.TextScaled = true
 
--- Fonctions toggle
+-- Toggles init
 local toggles = {
     autoAttack = false,
     autoBuy = false,
@@ -26,15 +26,24 @@ local toggles = {
     autoDungeon = false
 }
 
--- Actions simulées
+-- Import du service pour simuler un clic souris (M1)
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+-- Fonctions des boutons
 local function runToggle(name)
     while toggles[name] do
-        print("[" .. name .. "] en cours...")
-        task.wait(1)
+        if name == "autoAttack" then
+            -- Simule un clic gauche toutes les 0.1 sec
+            VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+            VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0)
+        else
+            print("[" .. name .. "] en cours...")
+        end
+        task.wait(0.1)
     end
 end
 
--- Fonction de création de bouton
+-- Fonction de création de boutons dans l'UI
 local function createToggleButton(text, toggleName, yPos)
     local button = Instance.new("TextButton", frame)
     button.Size = UDim2.new(1, -20, 0, 30)
@@ -56,7 +65,7 @@ local function createToggleButton(text, toggleName, yPos)
     end)
 end
 
--- Création des boutons
+-- Boutons affichés
 createToggleButton("Auto Attack", "autoAttack", 40)
 createToggleButton("Auto Buy (E)", "autoBuy", 80)
 createToggleButton("Auto Fusion", "autoFusion", 120)
